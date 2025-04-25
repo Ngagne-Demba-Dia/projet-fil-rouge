@@ -12,7 +12,7 @@ pipeline {
         stage('Cloner le dépôt') {
             steps {
                 git branch: '',
-                    url: 'https://github.com/Ngagne-Demba-Dia/odc-projet.git'
+                    url: 'https://github.com/Ngagne-Demba-Dia/projet-fil-rouge.git'
             }
         }
         stage('Build des images') {
