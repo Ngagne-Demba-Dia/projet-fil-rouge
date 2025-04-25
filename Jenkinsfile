@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_USER = 'angevirus'
         BACKEND_IMAGE = "${DOCKER_USER}/backend"
-        FRONTEND_IMAGE = "${DOCKER_USER}/brontend"
+        FRONTEND_IMAGE = "${DOCKER_USER}/frontend"
         MIGRATE_IMAGE = "${DOCKER_USER}/git-backend"
     }
 
