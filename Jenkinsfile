@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         DOCKER_USER = 'angevirus'
-        BACKEND_IMAGE = "${DOCKER_USER}/Backend"
-        FRONTEND_IMAGE = "${DOCKER_USER}/Frontend"
+        BACKEND_IMAGE = "${DOCKER_USER}/backend"
+        FRONTEND_IMAGE = "${DOCKER_USER}/brontend"
         MIGRATE_IMAGE = "${DOCKER_USER}/git-backend"
     }
 
