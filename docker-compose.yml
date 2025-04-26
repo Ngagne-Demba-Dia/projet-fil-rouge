@@ -9,6 +9,11 @@ services:
     ports:
       - "8001:8000"
     depends_on:
+    frontend:
+    build: ./Frontend
+    container_name: frontend
+    ports:
+      - "8081:80"
       - database
     environment:
       - DATABASE_HOST=database
