@@ -34,23 +34,9 @@ pipeline {
             }
         }
 
-        stage('Installer Docker Compose') {
-            steps {
-                sh '''
-                    if ! command -v docker-compose &> /dev/null
-                    then
-                        echo "docker-compose not found, installing..."
-                        curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-                        chmod +x /usr/local/bin/docker-compose
-                    fi
-                    docker-compose --version
-                '''
-            }
-        }
-
         stage('Déploiement local avec Docker Compose') {
     steps {
-        dir('./git/docker-compose.yml') {
+        dir('./git') {
             sh '''
                 docker-compose down --remove-orphans || true
                 docker-compose pull
