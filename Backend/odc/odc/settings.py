@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'odc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'odcdb',
-        'USER': 'odc',
-        'PASSWORD': 'odc123',
+        'NAME': 'odc_db',
+        'USER': 'postgres',
+        'PASSWORD': 'demba',
         'HOST': 'database',
         'PORT': '5432',
     }
