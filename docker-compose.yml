@@ -10,10 +10,13 @@ services:
       - "8001:8000"
     depends_on:
     frontend:
-    build: ./Frontend
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
     container_name: frontend
     ports:
       - "8081:80"
+    depends_on:
       - database
     environment:
       - DATABASE_HOST=database
