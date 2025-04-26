@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: backend
     ports:
-      - "8001:8000"
+      - "8002:8000"
     depends_on:
       - database
     environment:
@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     ports:
-      - "8081:80"
+      - "8082:80"
     depends_on:
       - backend
     restart: unless-stopped
@@ -36,7 +36,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5433:5432"
+      - "5434:5433"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -45,8 +45,8 @@ services:
     image: jenkins/jenkins:lts
     container_name: jenkins
     ports:
-      - "8082:8080"
-      - "50001:50000"
+      - "8083:8080"
+      - "50002:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
