@@ -39,6 +39,7 @@ pipeline {
        
             sh '''
                 docker-compose down --remove-orphans || true
+                docker-compose down backend || true 
                 docker-compose pull
                 docker-compose up -d --build
             '''
