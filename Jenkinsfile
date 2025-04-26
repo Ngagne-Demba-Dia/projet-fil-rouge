@@ -15,6 +15,7 @@ pipeline {
                     url: 'https://github.com/Ngagne-Demba-Dia/projet-fil-rouge.git'
             }
         }
+
         stage('Build des images') {
             steps {
                 sh 'docker build -t $BACKEND_IMAGE:latest ./Backend/odc'
@@ -33,15 +34,28 @@ pipeline {
             }
         }
 
+        stage('Installer Docker Compose') {
+            steps {
+                sh '''
+                    if ! command -v docker-compose &> /dev/null
+                    then
+                        echo "docker-compose not found, installing..."
+                        curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                        chmod +x /usr/local/bin/docker-compose
+                    fi
+                    docker-compose --version
+                '''
+            }
+        }
+
         stage('Déploiement local avec Docker Compose') {
             steps {
                 sh '''
-                    docker compose down || true
-                    docker compose pull
-                    docker compose up -d --build
+                    docker-compose down || true
+                    docker-compose pull
+                    docker-compose up -d --build
                 '''
             }
         }
     }
-
-    }
+}
