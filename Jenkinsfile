@@ -36,7 +36,7 @@ pipeline {
 
         stage('Déploiement local avec Docker Compose') {
     steps {
-        dir(git) {
+        dir('git') {
             sh '''
                 docker-compose down --remove-orphans || true
                 docker-compose pull
