@@ -16,6 +16,30 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis for Backend') {
+            agent any
+            steps {
+                dir('Backend/odc') {
+                    echo 'Analyse SonarQube du Backend...'
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Analysis for Frontend') {
+            agent any
+            steps {
+                dir('Frontend') {
+                    echo 'Analyse SonarQube du Frontend...'
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
+                    }
+                }
+            }
+        }
+
         stage('Build des images') {
             steps {
                 sh 'docker build -t $BACKEND_IMAGE:latest ./Backend/odc'
@@ -35,17 +59,14 @@ pipeline {
         }
 
         stage('Déploiement local avec Docker Compose') {
-    steps {
-       
-            sh '''
-                docker-compose down --remove-orphans || true
-                docker-compose rm -f backend || true 
-                docker-compose pull
-                docker-compose up -d --build
-            '''
-        
-    }
-}
-
+            steps {
+                sh '''
+                    docker-compose down --remove-orphans || true
+                    docker-compose rm -f backend || true 
+                    docker-compose pull
+                    docker-compose up -d --build
+                '''
+            }
+        }
     }
 }
