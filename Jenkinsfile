@@ -24,6 +24,7 @@ pipeline {
                     echo 'Analyse SonarQube du Backend...'
                     echo 'Nettoyage du cache Sonar...'
                     sh 'rm -rf ~/.sonar/cache'
+                    sh 'rm -rf /root/.sonar/_tmp'
                     withSonarQubeEnv('SonarQube') {
                         sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}"
                         // sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
