@@ -19,24 +19,25 @@ pipeline {
         }
 
         stage('SonarQube Analysis for Backend') {
-            agent any
             steps {
                 dir('Backend/odc') {
                     echo 'Analyse SonarQube du Backend...'
                     withSonarQubeEnv('SonarQube') {
-                        sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
+                        sh 'rm -rf ~/.sonar/cache'
+                        sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}"
+                        // sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
                     }
                 }
             }
         }
 
         stage('SonarQube Analysis for Frontend') {
-            agent any
             steps {
                 dir('Frontend') {
                     echo 'Analyse SonarQube du Frontend...'
                     withSonarQubeEnv('SonarQube') {
-                        sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
+                        sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}"
+                        // sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
                     }
                 }
             }
