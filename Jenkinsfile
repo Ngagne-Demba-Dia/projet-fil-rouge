@@ -33,7 +33,7 @@ pipeline {
                                 echo "Nettoyage du cache Sonar dans le conteneur..."
                                 rm -rf /opt/sonar-scanner/.sonar || true
                                 echo "Lancement de l’analyse SonarQube Backend..."
-                                sonar-scanner -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.scanner.skipPluginCache=true
+                                sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL -Dsonar.scanner.skipPluginCache=true
                             '''
                         }
                     }
@@ -56,7 +56,7 @@ pipeline {
                                 echo "Nettoyage du cache Sonar dans le conteneur..."
                                 rm -rf /opt/sonar-scanner/.sonar || true
                                 echo "Lancement de l’analyse SonarQube Frontend..."
-                                sonar-scanner -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.scanner.skipPluginCache=true
+                                sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL -Dsonar.scanner.skipPluginCache=true
                             '''
                         }
                     }
