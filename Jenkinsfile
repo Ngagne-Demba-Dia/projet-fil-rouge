@@ -6,7 +6,7 @@ pipeline {
         BACKEND_IMAGE = "${DOCKER_USER}/backend"
         FRONTEND_IMAGE = "${DOCKER_USER}/frontend"
         MIGRATE_IMAGE = "${DOCKER_USER}/git-backend"
-        SONARQUBE_URL = 'https://40aa-41-214-74-161.ngrok-free.app'
+        SONARQUBE_URL = 'https://0a8d-41-214-74-161.ngrok-free.app'
         SONARQUBE_TOKEN = credentials('SONAR_TOKEN')
     }
 
