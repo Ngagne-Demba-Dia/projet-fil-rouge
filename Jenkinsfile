@@ -18,54 +18,38 @@ pipeline {
             }
         }
 
-        // stage('SonarQube Analysis for Backend') {
-        //     steps {
-        //         dir('Backend/odc') {
-        //             echo 'Analyse SonarQube du Backend...'
-        //             sh '''
-        //                 echo "Nettoyage complet du cache Sonar..."
-        //                 rm -rf /root/.sonar || true
-        //                 rm -rf ~/.sonar || true
-        //                 echo "Nettoyage du cache Sonar terminé."
-        //                '''
-        //             withSonarQubeEnv('SonarQube') {
-        //                 sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}"
-        //                 // sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
-        //             }
-        //         }
-        //     }
-        // }
+        // ✅ Étape Backend avec SonarQube dans un conteneur Docker
         stage('SonarQube Analysis for Backend') {
-            agent{
+            agent {
                 docker {
                     image 'sonarsource/sonar-scanner-cli:latest'
-                    //args '-v /var/run/docker.sock:/var/run/docker.sock -v /root/.sonar:/root/.sonar -v ~/.sonar:~/.sonar'
                 }
             }
             steps {
                 dir('Backend/odc') {
                     echo 'Analyse SonarQube du Backend...'
-                    sh '''
-                        echo "Nettoyage complet du cache Sonar..."
-                        rm -rf /root/.sonar || true
-                        rm -rf ~/.sonar || true
-                        echo "Nettoyage du cache Sonar terminé."
-                       '''
-                    withSonarQubeEnv('SonarQube') {
-                        sh "sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}"
-                        // sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
+                    retry(2) {
+                        sh '''
+                            echo "Nettoyage du cache Sonar dans le conteneur..."
+                            rm -rf /opt/sonar-scanner/.sonar/cache || true
+                            rm -rf /opt/sonar-scanner/.sonar/_tmp || true
+                            echo "Lancement de l’analyse SonarQube Backend..."
+                            sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}
+                        '''
                     }
                 }
             }
         }
 
+        // ✅ Étape Frontend avec retry et appel correct du scanner installé localement
         stage('SonarQube Analysis for Frontend') {
             steps {
                 dir('Frontend') {
                     echo 'Analyse SonarQube du Frontend...'
                     withSonarQubeEnv('SonarQube') {
-                        sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}"
-                        // sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_URL"
+                        retry(2) {
+                            sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}"
+                        }
                     }
                 }
             }
