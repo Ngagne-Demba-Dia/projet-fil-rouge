@@ -18,7 +18,6 @@ pipeline {
             }
         }
 
-        // ✅ Étape Backend avec SonarQube dans un conteneur Docker
         stage('SonarQube Analysis for Backend') {
             agent {
                 docker {
@@ -41,14 +40,19 @@ pipeline {
             }
         }
 
-        // ✅ Étape Frontend avec retry et appel correct du scanner installé localement
         stage('SonarQube Analysis for Frontend') {
             steps {
                 dir('Frontend') {
                     echo 'Analyse SonarQube du Frontend...'
                     withSonarQubeEnv('SonarQube') {
                         retry(2) {
-                            sh "${tool 'SonarScanner'}/bin/sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}"
+                            sh '''
+                                echo "Nettoyage du cache Sonar..."
+                                rm -rf ~/.sonar/cache || true
+                                rm -rf ~/.sonar/_tmp || true
+                                echo "Lancement de l’analyse SonarQube Frontend..."
+                                ${SONAR_SCANNER_HOME}/bin/sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}
+                            '''
                         }
                     }
                 }
