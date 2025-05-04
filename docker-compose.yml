@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: backend
     ports:
-      - "8001:8000"    # ou "8005:8000" selon ton choix
+      - "8002:8000"    # ou "8005:8000" selon ton choix
     depends_on:
       - database
     environment:
@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     ports:
-      - "5175:5176"    # ou "5175:5176" selon ton choix
+      - "5176:5177"    # ou "5175:5176" selon ton choix
     depends_on:
       - backend
     restart: unless-stopped
@@ -36,7 +36,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5439:5432"    # ou "5439:5438" selon ton choix
+      - "5440:5432"    # ou "5439:5438" selon ton choix
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -45,7 +45,7 @@ services:
     image: jenkins/jenkins:lts
     container_name: jenkins
     ports:
-      - "8083:8080"    # ou "8089:8080"
+      - "8084:8080"    # ou "8089:8080"
       - "50002:50000"  # ou "50004:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
@@ -57,7 +57,7 @@ services:
     image: sonarqube:lts
     container_name: sonarqube
     ports:
-      - "9010:9009"    # ou "9010:9009"
+      - "9011:9009"    # ou "9010:9009"
     environment:
       - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
     volumes:
