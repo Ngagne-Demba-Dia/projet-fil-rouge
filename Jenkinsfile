@@ -41,17 +41,22 @@ pipeline {
         }
 
         stage('SonarQube Analysis for Frontend') {
+            agent {
+                docker {
+                    image 'sonarsource/sonar-scanner-cli:latest'
+                }
+            }
             steps {
                 dir('Frontend') {
                     echo 'Analyse SonarQube du Frontend...'
                     withSonarQubeEnv('SonarQube') {
                         retry(2) {
                             sh '''
-                                echo "Nettoyage du cache Sonar..."
-                                rm -rf ~/.sonar/cache || true
-                                rm -rf ~/.sonar/_tmp || true
-                                echo "Lancement de l’analyse SonarQube Frontend..."
-                                ${SONAR_SCANNER_HOME}/bin/sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}
+                                echo "Nettoyage du cache Sonar dans le conteneur..."
+                            rm -rf /opt/sonar-scanner/.sonar/cache || true
+                            rm -rf /opt/sonar-scanner/.sonar/_tmp || true
+                            echo "Lancement de l’analyse SonarQube Frontend..."
+                            sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}
                             '''
                         }
                     }
