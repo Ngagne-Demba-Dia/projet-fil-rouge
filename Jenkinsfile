@@ -27,14 +27,15 @@ pipeline {
             steps {
                 dir('Backend/odc') {
                     echo 'Analyse SonarQube du Backend...'
-                    retry(2) {
-                        sh '''
-                            echo "Nettoyage du cache Sonar dans le conteneur..."
-                            rm -rf /opt/sonar-scanner/.sonar/cache || true
-                            rm -rf /opt/sonar-scanner/.sonar/_tmp || true
-                            echo "Lancement de l’analyse SonarQube Backend..."
-                            sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}
-                        '''
+                    withSonarQubeEnv('SonarQube') {
+                        retry(2) {
+                            sh '''
+                                echo "Nettoyage du cache Sonar dans le conteneur..."
+                                rm -rf /opt/sonar-scanner/.sonar || true
+                                echo "Lancement de l’analyse SonarQube Backend..."
+                                sonar-scanner -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.scanner.skipPluginCache=true
+                            '''
+                        }
                     }
                 }
             }
@@ -53,10 +54,9 @@ pipeline {
                         retry(2) {
                             sh '''
                                 echo "Nettoyage du cache Sonar dans le conteneur..."
-                            rm -rf /opt/sonar-scanner/.sonar/cache || true
-                            rm -rf /opt/sonar-scanner/.sonar/_tmp || true
-                            echo "Lancement de l’analyse SonarQube Frontend..."
-                            sonar-scanner -Dsonar.login=${SONARQUBE_TOKEN} -Dsonar.host.url=${SONARQUBE_URL}
+                                rm -rf /opt/sonar-scanner/.sonar || true
+                                echo "Lancement de l’analyse SonarQube Frontend..."
+                                sonar-scanner -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.scanner.skipPluginCache=true
                             '''
                         }
                     }
