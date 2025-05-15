@@ -1,20 +1,29 @@
-# Use the latest LTS version of Node.js
-FROM node:23-alpine
- 
-# Set the working directory inside the container
+# Étape 1 : Build de l'application
+FROM node:18-alpine AS builder
+
 WORKDIR /app
- 
-# Copy package.json and package-lock.json
+
+# Copier uniquement les fichiers nécessaires pour installer les deps
 COPY package*.json ./
- 
-# Install dependencies
+
+# Installer les dépendances
 RUN npm install
- 
-# Copy the rest of your application files
+
+# Copier tout le code
 COPY . .
- 
-# Expose the port your app runs on
-EXPOSE 5173
- 
-# Define the command to run your app
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+
+# Construire l'application (génère le dossier dist/)
+RUN npm run build
+
+# Étape 2 : Serveur web (nginx)
+FROM nginx:alpine
+
+# Copier le build vers le dossier de nginx
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copier un fichier de conf nginx personnalisé (optionnel)
+# COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
